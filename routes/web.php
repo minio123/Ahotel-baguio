@@ -29,14 +29,24 @@ Route::prefix('/')->middleware('auth')->group(function(){
   // ROUTES
   Route::get('dashboard', $controller_path . '\DashboardsController@index')->name('dashboard');
 
-  // ROUTES
+  // ROUTES GUESTS
   Route::get('guests', $controller_path . '\GuestsController@index')->name('guests');
 
-  // ROUTES
+  // ROUTES ROOMS
   Route::get('rooms-room', $controller_path . '\RoomsController@index')->name('rooms-room');
+  Route::post('fetch-all-rooms', $controller_path . '\RoomsController@fetch_all');
+  Route::get('fetch-room-data/{id}', $controller_path . '\RoomsController@show');
+  Route::post('create-room', $controller_path . '\RoomsController@store');
+  Route::post('update-room/{id}', $controller_path . '\RoomsController@update');
+  Route::post('detele-room/{id}', $controller_path . '\RoomsController@destroy');
 
-  // ROUTES
+  // ROUTES ROOM TYPES
   Route::get('rooms-room-types', $controller_path . '\RoomTypesController@index')->name('rooms-room-types');
+  Route::get('fetch-all-room-types', $controller_path . '\RoomTypesController@fetch_all');
+  Route::get('fetch-room-type-data/{id}', $controller_path . '\RoomTypesController@show');
+  Route::post('create-room-type', $controller_path . '\RoomTypesController@store');
+  Route::post('update-room-type/{id}', $controller_path . '\RoomTypesController@update');
+  Route::post('delete-room-type/{id}', $controller_path . '\RoomTypesController@destroy');
 
   // ROUTES USERS
   Route::get('settings-users', $controller_path . '\UsersController@index')->name('settings-users');
@@ -47,8 +57,12 @@ Route::prefix('/')->middleware('auth')->group(function(){
   Route::post('update-user-password/{id}', $controller_path . '\UsersController@update_password');
   Route::post('delete-user/{id}', $controller_path . '\UsersController@destroy');
 
-  // ROUTES
+  // ROUTES PERMISSION
   Route::get('settings-permissions', $controller_path . '\PermissionsController@index')->name('settings-permission');
+
+  //ROUTES SELECT2
+  Route::get('get-rooms', $controller_path . '\Select2Controller@rooms');
+  Route::get('get-rooms', $controller_path . '\Select2Controller@room_type');
 });
 
 Route::get('/logout',  $controller_path. '\UsersController@logout')->name('logout');

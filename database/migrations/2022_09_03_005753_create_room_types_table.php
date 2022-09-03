@@ -14,8 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('room_types', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+          $table->id();
+          $table->string('room_type_name')->nullable();
+          $table->string('room_type_acronym')->nullable();
+          $table->tinyInteger('is_active')->default(1);
+          $table->integer('created_by')->nullable();
+          $table->integer('updated_by')->nullable();
+          $table->timestamps();
+
         });
     }
 

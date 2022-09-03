@@ -154,3 +154,9 @@
   box-shadow: 0 2px 4px 0 rgba(105, 108, 255, 0.4);
 }
 
+.page-item.active .page-link, .page-item.active .page-link:hover, .page-item.active .page-link:focus, .pagination li.active > a:not(.page-link), .pagination li.active > a:not(.page-link):hover, .pagination li.active > a:not(.page-link):focus {
+  border-color: #20c997;
+  background-color: #20c997;
+  color: #fff;
+  box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4);
+}

@@ -23,21 +23,19 @@
                   <th>Room No.</th>
                   <th>Room Type</th>
                   <th>No. of Beds</th>
-                  <th>Created By</th>
                   <th>Actions</th>
                 </thead>
-                <tbody>
-                  <tr>
+                <tbody id="roomBody">
+                  {{-- <tr>
                     <td>301</td>
                     <td>Standard Economy</td>
                     <td>2</td>
-                    <td>Herminio Doton Amboni Jr</td>
                     <td>
                       <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="View"><button class="btn btn-primary btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#viewModal"><i class="bx bx-show"></i></button></span>
                       <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Edit"><button class="btn btn-info btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bx bx-edit"></i></button></span>
                       <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Delete"><button class="btn btn-danger btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bx bx-trash"></i></button></span>
                     </td>
-                  </tr>
+                  </tr> --}}
                 </tbody>
               </table>
             </div>
@@ -57,31 +55,36 @@
           <div class="modal-body">
             <form id="addForm">
               <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <div class="mb-3">
                     <label>Room No.</label>
-                    <input type="text" class="form-control" id="room_no" placeholder="Room No" autocomplete="off">
+                    <input type="text" class="form-control" id="room_no" name="room_no" placeholder="Room No" autocomplete="off">
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <div class="mb-3">
                     <label>Room Type</label>
-                    <select id="room_type">
+                    <select id="room_type_id" name="room_type_id">
                       <option value=""></option>
-                      <option value="1">Standard Queen</option>
                     </select>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <div class="mb-3">
                     <label>No of Beds</label>
-                    <input type="number" class="form-control" id="no_of_beds" min="1" value="1" autocomplete="off">
+                    <input type="number" class="form-control" id="no_of_beds" name="no_of_beds" min="1" value="1" autocomplete="off">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label>Room Rate</label>
+                    <input type="text" class="form-control" id="room_rate" name="room_rate" placeholder="Room Rate" autocomplete="off">
                   </div>
                 </div>
                 <div class="col-md-12">
                   <div class="mb-3">
                     <label>Other Room Description</label>
-                    <textarea class="form-control w-100" id="room_details" rows="5"></textarea>
+                    <textarea class="form-control w-100" id="room_details" name="room_details" rows="5"></textarea>
                   </div>
                 </div>
               </div>
@@ -107,31 +110,36 @@
           <div class="modal-body">
             <form id="editForm">
               <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <div class="mb-3">
                     <label>Room No.</label>
-                    <input type="text" class="form-control" id="edit_room_no" placeholder="Room No" autocomplete="off">
+                    <input type="text" class="form-control" id="edit_room_no" name ="room_no" placeholder="Room No" autocomplete="off">
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <div class="mb-3">
                     <label>Room Type</label>
-                    <select id="edit_room_type">
+                    <select id="edit_room_type_id" name="room_type_id">
                       <option value=""></option>
-                      <option value="1">Standard Queen</option>
                     </select>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <div class="mb-3">
                     <label>No of Beds</label>
-                    <input type="number" class="form-control" id="edit_no_of_beds" min="1" value="1" autocomplete="off">
+                    <input type="number" class="form-control" id="edit_no_of_beds" name="no_of_beds" min="1" value="1" autocomplete="off">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label>Room Rate</label>
+                    <input type="text" class="form-control" id="edit_room_rate" name="room_rate" placeholder="Room Rate" autocomplete="off">
                   </div>
                 </div>
                 <div class="col-md-12">
                   <div class="mb-3">
                     <label>Other Room Description</label>
-                    <textarea class="form-control w-100" id="edit_room_details" rows="5"></textarea>
+                    <textarea class="form-control w-100" id="edit_room_details" name="room_description" rows="5"></textarea>
                   </div>
                 </div>
               </div>
@@ -224,7 +232,9 @@
 </div>
 
 <script>
-  $('#zero_config').DataTable();
+  var table = $('#zero_config').DataTable({
+    processing: true
+  });
 
   var room_no = new Cleave('#room_no', {
     numeral: true,
@@ -241,23 +251,33 @@
     numeralThousandsGroupStyle: 'none'
   });
 
+  var room_rate = new Cleave('#room_rate', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand'
+  });
+
   var edit_no_of_beds = new Cleave('#edit_no_of_beds', {
     numeral: true,
     numeralThousandsGroupStyle: 'none'
   });
 
-  $('#room_type').select2({
+  var room_type = $('#room_type_id').select2({
     dropdownParent: $('#addModal'),
     width: '100%',
     allowClear: true,
     placeholder: 'Select Room Type'
   });
 
-  $('#edit_room_type').select2({
+  var edit_room_type = $('#edit_room_type_id').select2({
     dropdownParent: $('#editModal'),
     width: '100%',
     allowClear: true,
     placeholder: 'Select Room Type'
+  });
+
+  var edit_room_rate = new Cleave('#edit_room_rate', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand'
   });
 
   $('#room_details').summernote({
@@ -274,6 +294,150 @@
     toolbar: []
   });
 
+
+
+  //FETCHING SELECT2
+  getSelect2();
+  async function getSelect2(){
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      type:"GET",
+      url:'/get-rooms',
+      data:'',
+      dataType:'json',
+      beforeSend:function(){
+      },
+      success:function(response){
+        if(response.length > 0){
+          response.forEach(element => {
+            var newOption = new Option(element.room_type_name+' ('+element.room_type_acronym+')', element.id, false, false);
+            room_type.append(newOption).trigger('change');
+          });
+          response.forEach(element => {
+            var newOption = new Option(element.room_type_name+' ('+element.room_type_acronym+')', element.id, false, false);
+            edit_room_type.append(newOption).trigger('change');
+          });
+        }
+      },
+      error: function(error){
+       console.log(console.error);
+      }
+    });
+  }
+
+  //FETCH
+  fetchAllActiveRooms();
+  async function fetchAllActiveRooms(){
+
+    // $('.dataTables_processing').css({"display": "block", "z-index": 10000 });
+
+    // if ($.fn.DataTable.isDataTable('#zero_config')){
+    //   $('#zero_config').dataTable().fnClearTable();
+    //   $('#zero_config').dataTable().fnDestroy();
+    // }
+
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      type:"POST",
+      url:'/fetch-all-rooms',
+      data:'',
+      dataType:'json',
+      beforeSend:function(){
+      },
+      success:function(response){
+        const tBody = document.getElementById('roomBody');
+        tBody.innerHTML = '';
+        response.forEach(element => {
+          var row = document.createElement('tr');
+
+          row.innerHTML = `
+          <td>
+              ${element.room_no}
+          </td>
+          <td>
+              ${element.room_type_name} (${element.room_type_acronym})
+          </td>
+          <td>
+              ${element.no_of_beds}
+          </td>
+          <td>
+            <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="View">
+              <button class="btn btn-primary btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#viewModal" data-bs-id="${element.id}"><i class="bx bx-show"></i></button>
+            </span>
+            <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Edit">
+              <button class="btn btn-info btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-id="${element.id}"><i class="bx bx-edit"></i></button>
+            </span>
+            <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Delete">
+              <button class="btn btn-danger btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-id="${element.id}"><i class="bx bx-trash"></i></button>
+              </span>
+          </td>
+
+          `;
+          $('.dataTables_processing').css({"display": "none", "z-index": 10000 });
+          tBody.append(row);
+        });
+      },
+      error: function(error){
+       console.log(console.error);
+      }
+    });
+  }
+
+  //CREATE
+  $('#addBtn').on('click', async function(){
+    const form = document.getElementById('addForm');
+    const body = {};
+    const formData = new FormData(form);
+    formData.forEach((value, key) => body[key] = value);
+    body.files = '';
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      type:"POST",
+      url:'/create-room',
+      data:body,
+      dataType:'json',
+      beforeSend:function(){
+      },
+      success:function(response){
+        if(response.status == 'success'){
+          iziToast.success({
+            title: 'Success',
+            message: response.message,
+            position: 'topRight'
+          });
+          fetchAllActiveRooms();
+          room_type.val('').trigger('change');
+          $('#addModal').find('form')[0].reset();
+          $('#addModal').modal('toggle');
+        }
+      },
+      error: function(error){
+        var errors = error.responseJSON.errors;
+
+        for(var key in errors){
+          document.getElementById(key).classList.add('is-invalid');
+        }
+
+        setTimeout(() => {
+          for(var key in errors){
+            document.getElementById(key).classList.remove('is-invalid');
+          }
+        }, 3500);
+
+        iziToast.error({
+          title: 'Failed',
+          message: error.responseJSON.message,
+          position: 'topRight'
+        });
+      }
+    });
+  });
 
 </script>
 
