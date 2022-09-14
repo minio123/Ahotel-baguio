@@ -18,7 +18,7 @@
           </div>
           <div class="col-12">
             <div class="table-responsive mt-4">
-              <table class="table table-hover" id="zero_config">
+              <table class="table table-bordered dt-responsive nowrap" id="zero_config">
                 <thead>
                   <th>Module Name</th>
                   <th>Action Name</th>

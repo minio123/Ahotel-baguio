@@ -20,16 +20,15 @@ class RoomsController extends Controller
       return view('content.pages.rooms');
     }
 
-    public function fetch_all(){
+    public function fetch_all(Request $request){
+      if ($request->ajax()) {
       $data = Room::join('room_types', 'rooms.room_type_id','=', 'room_types.id')
                     ->where('rooms.is_active', 1)
-                    ->get("*");
+                    ->get(["rooms.*", "room_types.room_type_name", "room_type_acronym"]);
 
-      // $data = DB::table('rooms')
-      //           ->join('room_types', 'room_types.id', '=', 'rooms.room_type_id')
-      //           ->paginate(5);
+      return datatables()->of($data)->toJson();
 
-      return $data;
+      }
     }
 
     /**
@@ -79,7 +78,7 @@ class RoomsController extends Controller
       $insert->no_of_beds = $request->no_of_beds;
       $insert->room_rate = $request->room_rate ;
       $insert->room_description = $request->room_description;
-      $insert->created_by = $request->$curr_user;
+      $insert->created_by = $curr_user;
 
       $result = $insert->save();
 
@@ -116,7 +115,13 @@ class RoomsController extends Controller
     {
       $data = Room::find($id);
 
-      return $data;
+      $data = Room::join('room_types', 'rooms.room_type_id','=', 'room_types.id')
+                    ->join('users', 'users.id', '=', 'rooms.created_by')
+                    ->where('rooms.is_active', 1)
+                    ->where('rooms.id', $id)
+                    ->get(["rooms.*", "room_types.room_type_name", "room_type_acronym", 'users.name']);
+
+      return $data[0];
     }
 
     /**
@@ -145,15 +150,19 @@ class RoomsController extends Controller
 
       $room_count = Room::where('room_no', $request->room_no)
                           ->where('is_active',1)
-                          ->count();
+                          ->get();
 
-      if($room_count > 0){
-        $validated = $request->validate([
-          'room_no' => 'required|unique:rooms'
-        ]);
-      }else{
+      if( $request->id == $room_count[0]->id){
         $validated = $request->validate([
           'room_no' => 'required',
+          'room_type_id' => 'required',
+          'no_of_beds'  => 'required|numeric|min:1|not_in:0',
+          'room_rate'   => 'required'
+        ]);
+
+      }else{
+        $validated = $request->validate([
+          'room_no' => 'required|unique:rooms',
           'room_type_id' => 'required',
           'no_of_beds'  => 'required|numeric|min:1|not_in:0',
           'room_rate'   => 'required'
@@ -165,7 +174,7 @@ class RoomsController extends Controller
       $update->room_no = $request->room_no;
       $update->room_type_id = $request->room_type_id;
       $update->no_of_beds = $request->no_of_beds;
-      $update->rooom_rate = str_replace(',','',$request->rooom_rate);
+      $update->room_rate = $request->room_rate;
       $update->room_description = $request->room_description;
       $update->updated_by = $curr_user;
 
@@ -182,7 +191,7 @@ class RoomsController extends Controller
         $insert_logs->save();
 
         return array(
-          'status'  => 'succes',
+          'status'  => 'success',
           'message' => 'Room updated successfully'
         );
 
@@ -207,7 +216,7 @@ class RoomsController extends Controller
 
       $delete = Room::find($id);
 
-      $delete->room_no = 0;
+      $delete->is_active = 0;
 
       $result = $delete->save();
 
@@ -217,12 +226,12 @@ class RoomsController extends Controller
         $insert_logs->user_id = $curr_user;
         $insert_logs->module_name = "Room Lists Page";
         $insert_logs->action = "Delete";
-        $insert_logs->remarks = "Deleted Room ".$delete->room_no." data.";
+        $insert_logs->remarks = "Deleted Room ".$delete->room_no." data";
 
         $insert_logs->save();
 
         return array(
-          'status'  => 'succes',
+          'status'  => 'success',
           'message' => 'Room deleted successfully'
         );
 

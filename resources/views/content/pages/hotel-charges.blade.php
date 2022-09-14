@@ -4,24 +4,24 @@
 
 @section('content')
 <h4 class="fw-bold py-3 mb-4">
-  <span class="text-muted fw-light">Rooms /</span> Room Types
+  <span class="text-muted fw-light">Settings /</span> Hotel Charges
 </h4>
 
 <div class="row">
   <div class="col-md-12">
     <div class="card mb-4">
-      <h5 class="card-header">Room Type Lists</h5>
+      <h5 class="card-header">Charge Lists</h5>
       <div class="card-body">
         <div class="row">
           <div class="col-12 d-flex justify-content-end">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal"><i class="bx bx-plus"></i>&nbsp; Add Room Type</button>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal"><i class="bx bx-plus"></i>&nbsp; Add Charges</button>
           </div>
           <div class="col-12">
             <div class="table-responsive mt-4">
               <table class="table table-hover" id="zero_config">
                 <thead>
-                  <th>Room Type Name</th>
-                  <th>Room Acronym</th>
+                  <th>Charge Name</th>
+                  <th>Charge Type</th>
                   <th>Actions</th>
                 </thead>
                 <tbody id="roomTypeBody">
@@ -48,7 +48,7 @@
       <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="addModalTitle">Room Type Information</h5>
+            <h5 class="modal-title" id="addModalTitle">Charge Information</h5>
             <button type="button" class="btn-close close-add" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -56,14 +56,18 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="mb-3">
-                    <label>Room Type Name</label>
-                    <input type="text" class="form-control" id="room_type_name" name="room_type_name" placeholder="Room Type Name" autocomplete="off">
+                    <label>Charge Name</label>
+                    <input type="text" class="form-control" id="charge_name" name="charge_name" placeholder="Charge Name" autocomplete="off">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="mb-3">
-                    <label>Room Type Acronym</label>
-                    <input type="text" class="form-control" id="room_type_acronym" name="room_type_acronym" placeholder="Room Type Name" autocomplete="off">
+                    <label>Charge Type</label>
+                    <select class="form-control" id="charge_type" name="charge_type">
+                      <option value=""></option>
+                      <option value="Room Charge">Room Charge</option>
+                      <option value="Restaurant Charge">Restaurant Charge</option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -89,16 +93,21 @@
           <div class="modal-body">
             <form id="editForm">
               <div class="row">
+
                 <div class="col-md-6">
                   <div class="mb-3">
-                    <label>Room Type Name</label>
-                    <input type="text" class="form-control" id="edit_room_type_name" name="room_type_name" placeholder="Room Type Name" autocomplete="off">
+                    <label>Charge Name</label>
+                    <input type="text" class="form-control" id="edit_charge_name" name="charge_name" placeholder="Charge Name" autocomplete="off">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="mb-3">
-                    <label>Room Type Acronym</label>
-                    <input type="text" class="form-control" id="edit_room_type_acronym" name="room_type_acronym" placeholder="Room Type Name" autocomplete="off">
+                    <label>Charge Type</label>
+                    <select class="form-control" id="edit_charge_type" name="charge_type">
+                      <option value=""></option>
+                      <option value="Room Charge">Room Charge</option>
+                      <option value="Restaurant Charge">Restaurant Charge</option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -111,26 +120,6 @@
         </div>
       </div>
     </div>
-    <!--END -->
-
-    <!-- VIEW MODAL -->
-    {{-- <div class="modal fade" id="viewModal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="viewModalTitle">Room Type Information</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form id="addForm">
-              <div class="row">
-
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div> --}}
     <!--END -->
 
     <!-- DELETE MODAL -->
@@ -163,61 +152,22 @@
 
 <script>
 
+  var charge_type = $('#charge_type').select2({
+    placeholder: 'Select Charge Type',
+    width: '100%',
+    dropdownParent: $('#addModal')
+  });
+
+  var edit_charge_type = $('#edit_charge_type').select2({
+    placeholder: 'Select Charge Type',
+    width: '100%',
+    dropdownParent: $('#editModal')
+  });
+
   //FETCH
   var table;
-  fetAllActiveRoomType();
-  async function fetAllActiveRoomType(){
-
-    // $('.dataTables_processing').css({"display": "block", "z-index": 10000 });
-    // const tBody = document.getElementById('roomTypeBody');
-    // tBody.innerHTML = '';
-    // $.ajax({
-    //   type:"GET",
-    //   url:'/fetch-all-room-types',
-    //   data:'',
-    //   dataType:'json',
-    //   beforeSend:function(){
-    //   },
-    //   success:function(response){
-    //     if(response.length > 0){
-    //       response.forEach(element =>{
-    //         const row = document.createElement('tr');
-
-    //         row.innerHTML = `
-    //           <td>${element.room_type_name}</td>
-    //           <td>${element.room_type_acronym}</td>
-    //           <td>
-    //             <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Edit">
-    //               <button class="btn btn-info btn-icon btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-id="${element.id}">
-    //                 <i class="bx bx-edit"></i>
-    //               </button>
-    //             </span>
-    //             <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Delete">
-    //               <button class="btn btn-danger btn-icon btn-sm btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-id="${element.id}">
-    //                 <i class="bx bx-trash"></i>
-    //               </button>
-    //             </span>
-    //           </td>
-    //         `;
-    //         tBody.appendChild(row);
-    //         $('.dataTables_processing').css({"display": "none", "z-index": 10000 });
-    //       });
-    //     }else{
-    //       $('.dataTables_processing').css({"display": "none", "z-index": 10000 });
-    //       tBody.innerHTML=`
-    //         <tr>
-    //           <td colspan="4" class="text-center">
-    //             No matching records found
-    //           </td>
-    //         </tr>
-    //       `;
-    //     }
-    //   },
-    //   error: function(error){
-    //   console.log(error);
-    //   }
-    // });
-
+  fetAllActiveHotelCharges();
+  async function fetAllActiveHotelCharges(){
     table = $('#zero_config').DataTable({
         processing: true,
         searching: true,
@@ -226,12 +176,12 @@
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
-          url: "/fetch-all-room-types",
+          url: "/fetch-all-charges",
           type:"POST"
         },
         columns: [
-            {data: 'room_type_name'},
-            {data: 'room_type_acronym'},
+            {data: 'charge_name'},
+            {data: 'charge_type'},
             {
               data: null,
               render: function(data, type, full){
@@ -262,7 +212,7 @@
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
       type:"POST",
-      url:'/create-room-type',
+      url:'/create-charges',
       data:body,
       dataType:'json',
       beforeSend:function(){
@@ -275,6 +225,7 @@
             position: 'topRight'
           });
           table.ajax.reload();
+          charge_type.val('').trigger('change');
           $('#addModal').find('form')[0].reset();
           $('#addModal').modal('toggle');
         }
@@ -308,18 +259,18 @@
   //FETCHING FOR VIEWING DATA
   $('#zero_config tbody').on('click','.btn-edit', async function(){
     var id = $(this).attr('data-bs-id');
-    room_type_id = id;
+    hotel_charge_id = id;
     $.ajax({
       type:"GET",
-      url:'/fetch-room-type-data/'+id,
+      url:'/fetch-charges-data/'+id,
       data:'',
       dataType:'json',
       beforeSend:function(){
       },
       success:function(response){
         if(response != '' || response != null){
-          document.getElementById('edit_room_type_name').value = response.room_type_name;
-          document.getElementById('edit_room_type_acronym').value = response.room_type_acronym;
+          document.getElementById('edit_charge_name').value = response.charge_name;
+          edit_charge_type.val(response.charge_type).trigger('change');
         }
       },
       error: function(error){
@@ -340,7 +291,7 @@
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
       type:"POST",
-      url:'/update-room-type/'+room_type_id,
+      url:'/update-charges-data/'+hotel_charge_id,
       data:body,
       dataType:'json',
       beforeSend:function(){
@@ -387,7 +338,7 @@
    //DELETE
    $('#zero_config tbody').on('click','.btn-delete', async function(){
     var id = $(this).attr('data-bs-id');
-    room_type_id = id;
+    hotel_charge_id = id;
   });
 
   $('#deleteBtn').on('click', function(){
@@ -396,7 +347,7 @@
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
       type:"POST",
-      url:'/delete-room-type/'+room_type_id,
+      url:'/delete-charges/'+hotel_charge_id,
       data:'',
       dataType:'json',
       beforeSend:function(){

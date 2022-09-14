@@ -32,17 +32,20 @@ Route::prefix('/')->middleware('auth')->group(function(){
   // ROUTES GUESTS
   Route::get('guests', $controller_path . '\GuestsController@index')->name('guests');
 
+
+  Route::post('guest-select-data', $controller_path .'\Select2Controller@guest');
+
   // ROUTES ROOMS
   Route::get('rooms-room', $controller_path . '\RoomsController@index')->name('rooms-room');
   Route::post('fetch-all-rooms', $controller_path . '\RoomsController@fetch_all');
   Route::get('fetch-room-data/{id}', $controller_path . '\RoomsController@show');
   Route::post('create-room', $controller_path . '\RoomsController@store');
   Route::post('update-room/{id}', $controller_path . '\RoomsController@update');
-  Route::post('detele-room/{id}', $controller_path . '\RoomsController@destroy');
+  Route::post('delete-room/{id}', $controller_path . '\RoomsController@destroy');
 
   // ROUTES ROOM TYPES
   Route::get('rooms-room-types', $controller_path . '\RoomTypesController@index')->name('rooms-room-types');
-  Route::get('fetch-all-room-types', $controller_path . '\RoomTypesController@fetch_all');
+  Route::post('fetch-all-room-types', $controller_path . '\RoomTypesController@fetch_all');
   Route::get('fetch-room-type-data/{id}', $controller_path . '\RoomTypesController@show');
   Route::post('create-room-type', $controller_path . '\RoomTypesController@store');
   Route::post('update-room-type/{id}', $controller_path . '\RoomTypesController@update');
@@ -50,12 +53,40 @@ Route::prefix('/')->middleware('auth')->group(function(){
 
   // ROUTES USERS
   Route::get('settings-users', $controller_path . '\UsersController@index')->name('settings-users');
-  Route::get('fetch-all-user', $controller_path . '\UsersController@fetch_all_user');
+  Route::post('fetch-all-user', $controller_path . '\UsersController@fetch_all_user');
   Route::get('fetch-user-data/{id}', $controller_path . '\UsersController@show');
   Route::post('create-user', $controller_path . '\UsersController@store');
   Route::post('update-user-data/{id}', $controller_path . '\UsersController@update');
   Route::post('update-user-password/{id}', $controller_path . '\UsersController@update_password');
   Route::post('delete-user/{id}', $controller_path . '\UsersController@destroy');
+
+
+  //ROUTE BOOKING SOURCE
+  Route::get('settings-source', $controller_path . '\BookingSourceController@index')->name('settings-source');
+  Route::post('fetch-all-source', $controller_path . '\BookingSourceController@fetch_all');
+  Route::get('fetch-source-data/{id}', $controller_path . '\BookingSourceController@show');
+  Route::post('create-source', $controller_path . '\BookingSourceController@store');
+  Route::post('update-source-data/{id}', $controller_path . '\BookingSourceController@update');
+  Route::post('delete-source/{id}', $controller_path . '\BookingSourceController@destroy');
+
+
+  //ROUTE DISCOUNTS
+  Route::get('settings-discount', $controller_path . '\DiscountsController@index')->name('settings-discount');
+  Route::post('fetch-all-discount', $controller_path . '\DiscountsController@fetch_all');
+  Route::get('fetch-discount-data/{id}', $controller_path . '\DiscountsController@show');
+  Route::post('create-discount', $controller_path . '\DiscountsController@store');
+  Route::post('update-discount-data/{id}', $controller_path . '\DiscountsController@update');
+  Route::post('delete-discount/{id}', $controller_path . '\DiscountsController@destroy');
+
+
+  //ROUTE HOTEL CHARGES
+  Route::get('settings-charges', $controller_path . '\HotelChargesController@index')->name('settings-charges');
+  Route::post('fetch-all-charges', $controller_path . '\HotelChargesController@fetch_all');
+  Route::get('fetch-charges-data/{id}', $controller_path . '\HotelChargesController@show');
+  Route::post('create-charges', $controller_path . '\HotelChargesController@store');
+  Route::post('update-charges-data/{id}', $controller_path . '\HotelChargesController@update');
+  Route::post('delete-charges/{id}', $controller_path . '\HotelChargesController@destroy');
+
 
   // ROUTES PERMISSION
   Route::get('settings-permissions', $controller_path . '\PermissionsController@index')->name('settings-permission');

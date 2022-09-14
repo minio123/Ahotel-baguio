@@ -160,3 +160,12 @@
   color: #fff;
   box-shadow: 0 0.125rem 0.25rem rgba(105, 108, 255, 0.4);
 }
+
+
+#view_room_description p{
+  margin-bottom: 0rem !important;
+}
+
+.table > :not(caption) > * > *{
+  border: 1px solid #cfcfcf !important;
+}

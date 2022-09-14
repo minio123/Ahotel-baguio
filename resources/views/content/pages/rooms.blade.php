@@ -23,6 +23,7 @@
                   <th>Room No.</th>
                   <th>Room Type</th>
                   <th>No. of Beds</th>
+                  <th>Room Rate</th>
                   <th>Actions</th>
                 </thead>
                 <tbody id="roomBody">
@@ -50,7 +51,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="addModalTitle">Room Information</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close close-add" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form id="addForm">
@@ -92,7 +93,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-success" id="addBtn">Save changes</button>
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-outline-secondary close-add" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -160,40 +161,46 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="viewModalTitle">Room Information</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close close-view" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div class="mb-3">
                   <label>Room No.:&nbsp;</label>
-                  <label>&nbsp;<b id="view_room_no">301</b></label>
+                  <label>&nbsp;<b id="view_room_no">Loading...</b></label>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div class="mb-3">
                   <label>Room Type:&nbsp;</label>
-                  <label>&nbsp;<b id="view_room_type">Standard Queen</b></label>
+                  <label>&nbsp;<b id="view_room_type_name">Loading...</b></label>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label>Room Rate:&nbsp;</label>
+                  <label>&nbsp;<b id="view_room_rate">Loading...</b></label>
+                </div>
+              </div>
+              <div class="col-md-6">
                 <div class="mb-3">
                   <label>No of Beds:&nbsp;</label>
-                  <label>&nbsp;<b id="view_no_of_beds">2 beds</b></label>
+                  <label>&nbsp;<b id="view_no_of_beds"></b></label>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
                   <label>Other Room Description</label>
-                  <div id="view_other_room_description">
-                    N/A
+                  <div id="view_room_description">
+                    Loading...
                   </div>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div class="mb-3">
                   <label>Created By:&nbsp;</label>
-                  <label>&nbsp;<b id="view_added_by">Herminio Amboni Jr</b></label>
+                  <label>&nbsp;<b id="view_added_by">Loading...</b></label>
                 </div>
               </div>
             </div>
@@ -232,9 +239,9 @@
 </div>
 
 <script>
-  var table = $('#zero_config').DataTable({
-    processing: true
-  });
+  // var table = $('#zero_config').DataTable({
+  //   processing: true
+  // });
 
   var room_no = new Cleave('#room_no', {
     numeral: true,
@@ -328,63 +335,49 @@
   }
 
   //FETCH
+  var table;
   fetchAllActiveRooms();
   async function fetchAllActiveRooms(){
-
-    // $('.dataTables_processing').css({"display": "block", "z-index": 10000 });
-
-    // if ($.fn.DataTable.isDataTable('#zero_config')){
-    //   $('#zero_config').dataTable().fnClearTable();
-    //   $('#zero_config').dataTable().fnDestroy();
-    // }
-
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      type:"POST",
-      url:'/fetch-all-rooms',
-      data:'',
-      dataType:'json',
-      beforeSend:function(){
-      },
-      success:function(response){
-        const tBody = document.getElementById('roomBody');
-        tBody.innerHTML = '';
-        response.forEach(element => {
-          var row = document.createElement('tr');
-
-          row.innerHTML = `
-          <td>
-              ${element.room_no}
-          </td>
-          <td>
-              ${element.room_type_name} (${element.room_type_acronym})
-          </td>
-          <td>
-              ${element.no_of_beds}
-          </td>
-          <td>
-            <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="View">
-              <button class="btn btn-primary btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#viewModal" data-bs-id="${element.id}"><i class="bx bx-show"></i></button>
-            </span>
-            <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Edit">
-              <button class="btn btn-info btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-id="${element.id}"><i class="bx bx-edit"></i></button>
-            </span>
-            <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Delete">
-              <button class="btn btn-danger btn-icon btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-id="${element.id}"><i class="bx bx-trash"></i></button>
-              </span>
-          </td>
-
-          `;
-          $('.dataTables_processing').css({"display": "none", "z-index": 10000 });
-          tBody.append(row);
-        });
-      },
-      error: function(error){
-       console.log(console.error);
-      }
+      table = $('#zero_config').DataTable({
+        processing: true,
+        searching: true,
+        serverSide: true,
+        ajax: {
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          url: "/fetch-all-rooms",
+          type:"POST"
+        },
+        columns: [
+            {data: 'room_no'},
+            {
+              data: null,
+              render: function(data, type, full){
+                return full.room_type_name +" ("+full.room_type_acronym+")"
+              }
+            },
+            {data: 'no_of_beds'},
+            {data: 'room_rate'},
+            {
+              data: null,
+              render: function(data, type, full){
+                return `
+                  <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="View">
+                    <button class="btn btn-primary btn-icon btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#viewModal" data-bs-id="${full.id}"><i class="bx bx-show"></i></button>
+                  </span>
+                  <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Edit">
+                    <button class="btn btn-info btn-icon btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-id="${full.id}"><i class="bx bx-edit"></i></button>
+                  </span>
+                  <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Delete">
+                    <button class="btn btn-danger btn-icon btn-sm btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-id="${full.id}"><i class="bx bx-trash"></i></button>
+                  </span>
+                `;
+              }
+            }
+        ]
     });
+
   }
 
   //CREATE
@@ -411,7 +404,8 @@
             message: response.message,
             position: 'topRight'
           });
-          fetchAllActiveRooms();
+          // fetchAllActiveRooms();
+          table.ajax.reload();
           room_type.val('').trigger('change');
           $('#addModal').find('form')[0].reset();
           $('#addModal').modal('toggle');
@@ -435,6 +429,154 @@
           message: error.responseJSON.message,
           position: 'topRight'
         });
+      }
+    });
+  });
+
+  $('.close-add').on('click', async function (e) {
+    $('#addModal').find('form')[0].reset();
+  });
+
+  //FETCHING FOR VIEWING DATA
+  $('#zero_config tbody').on('click','.btn-edit, .btn-view', async function(){
+    var id = $(this).attr('data-bs-id');
+    room_id = id;
+    var cName = this.className;
+    $.ajax({
+      type:"GET",
+      url:'/fetch-room-data/'+id,
+      data:'',
+      dataType:'json',
+      beforeSend:function(){
+      },
+      success:function(response){
+        if(response != '' ||response != null){
+          if(cName == "btn btn-primary btn-icon btn-sm btn-view"){
+            document.getElementById('view_room_no').innerHTML = response.room_no;
+            document.getElementById('view_room_type_name').innerHTML = response.room_type_name;
+            document.getElementById('view_no_of_beds').innerHTML = response.no_of_beds;
+            document.getElementById('view_room_rate').innerHTML = response.room_rate;
+            document.getElementById('view_added_by').innerHTML = response.name;
+
+            if(response.room_description == '' || response.room_description == null){
+              document.getElementById('view_room_description').innerHTML = 'N/A';
+            }else{
+              document.getElementById('view_room_description').innerHTML = response.room_description;
+            }
+
+          }else{
+            document.getElementById('edit_room_no').value = response.room_no;
+            edit_room_type.val(response.room_type_id).trigger('change');
+            document.getElementById('edit_no_of_beds').value = response.no_of_beds;
+            document.getElementById('edit_room_rate').value = response.room_rate;
+          }
+        }
+      },
+      error: function(error){
+      console.log(error);
+      }
+    });
+  });
+
+  $('.close-view').on('click', async function (e) {
+    document.getElementById('view_room_no').innerHTML = "Loading...";
+    document.getElementById('view_room_type_name').innerHTML = "Loading...";
+    document.getElementById('view_no_of_beds').innerHTML = "Loading...";
+    document.getElementById('view_room_rate').innerHTML = "Loading...";
+    document.getElementById('view_added_by').innerHTML = "Loading...";
+    document.getElementById('view_room_description').innerHTML = "Loading...";
+  });
+
+  //UPDATE
+  $('#updateBtn').on('click', async function(){
+    const form = document.getElementById('editForm');
+    const body = {};
+    const formData = new FormData(form);
+    formData.forEach((value, key) => body[key] = value);
+
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      type:"POST",
+      url:'/update-room/'+room_id,
+      data:body,
+      dataType:'json',
+      beforeSend:function(){
+      },
+      success:function(response){
+        if(response.status == 'success'){
+          iziToast.success({
+            title: 'Success',
+            message: response.message,
+            position: 'topRight'
+          });
+          table.ajax.reload();
+          $('#editModal').modal('hide');
+        }else{
+          iziToast.error({
+            title: 'Failed',
+            message: response.message,
+            position: 'topRight'
+          });
+        }
+      },
+      error: function(error){
+        var errors = error.responseJSON.errors;
+
+        for(var key in errors){
+          document.getElementById(`edit_${key}`).classList.add('is-invalid');
+        }
+
+        setTimeout(() => {
+          for(var key in errors){
+            document.getElementById(`edit_${key}`).classList.remove('is-invalid');
+          }
+        }, 3500);
+
+        iziToast.error({
+          title: 'Failed',
+          message: error.responseJSON.message,
+          position: 'topRight'
+        });
+      }
+    });
+  });
+
+  //DELETE
+   $('#zero_config tbody').on('click','.btn-delete', async function(){
+    var id = $(this).attr('data-bs-id');
+    room_id = id;
+  });
+
+  $('#deleteBtn').on('click', function(){
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      type:"POST",
+      url:'/delete-room/'+room_id,
+      data:'',
+      dataType:'json',
+      beforeSend:function(){
+      },
+      success:function(response){
+        if(response.status == 'success'){
+          iziToast.success({
+            title: 'Success',
+            message: response.message,
+            position: 'topRight'
+          });
+          table.ajax.reload();
+          $('#deleteModal').modal('hide');
+        }else{
+          iziToast.error({
+            title: 'Failed',
+            message: response.message,
+            position: 'topRight'
+          });
+          $('#deleteModal').modal('hide');
+        }
       }
     });
   });

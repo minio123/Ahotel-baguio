@@ -4,24 +4,23 @@
 
 @section('content')
 <h4 class="fw-bold py-3 mb-4">
-  <span class="text-muted fw-light">Rooms /</span> Room Types
+  <span class="text-muted fw-light">Settings /</span> Booking Source
 </h4>
 
 <div class="row">
   <div class="col-md-12">
     <div class="card mb-4">
-      <h5 class="card-header">Room Type Lists</h5>
+      <h5 class="card-header">Booking Source Lists</h5>
       <div class="card-body">
         <div class="row">
           <div class="col-12 d-flex justify-content-end">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal"><i class="bx bx-plus"></i>&nbsp; Add Room Type</button>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal"><i class="bx bx-plus"></i>&nbsp; Add Booking Source</button>
           </div>
           <div class="col-12">
             <div class="table-responsive mt-4">
               <table class="table table-hover" id="zero_config">
                 <thead>
-                  <th>Room Type Name</th>
-                  <th>Room Acronym</th>
+                  <th>Booking Source</th>
                   <th>Actions</th>
                 </thead>
                 <tbody id="roomTypeBody">
@@ -48,22 +47,16 @@
       <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="addModalTitle">Room Type Information</h5>
+            <h5 class="modal-title" id="editModalTitle">Booking Soruce Information</h5>
             <button type="button" class="btn-close close-add" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form id="addForm">
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                   <div class="mb-3">
-                    <label>Room Type Name</label>
-                    <input type="text" class="form-control" id="room_type_name" name="room_type_name" placeholder="Room Type Name" autocomplete="off">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="mb-3">
-                    <label>Room Type Acronym</label>
-                    <input type="text" class="form-control" id="room_type_acronym" name="room_type_acronym" placeholder="Room Type Name" autocomplete="off">
+                    <label>Booking Source</label>
+                    <input type="text" class="form-control" id="source_name" name="source_name" placeholder="Booking Source Name" autocomplete="off">
                   </div>
                 </div>
               </div>
@@ -83,22 +76,16 @@
       <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="editModalTitle">Room Type Information</h5>
+            <h5 class="modal-title" id="editModalTitle">Booking Soruce Information</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form id="editForm">
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                   <div class="mb-3">
-                    <label>Room Type Name</label>
-                    <input type="text" class="form-control" id="edit_room_type_name" name="room_type_name" placeholder="Room Type Name" autocomplete="off">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="mb-3">
-                    <label>Room Type Acronym</label>
-                    <input type="text" class="form-control" id="edit_room_type_acronym" name="room_type_acronym" placeholder="Room Type Name" autocomplete="off">
+                    <label>Booking Source</label>
+                    <input type="text" class="form-control" id="edit_source_name" name="source_name" placeholder="Booking Source Name" autocomplete="off">
                   </div>
                 </div>
               </div>
@@ -165,8 +152,8 @@
 
   //FETCH
   var table;
-  fetAllActiveRoomType();
-  async function fetAllActiveRoomType(){
+  fetAllActiveSource();
+  async function fetAllActiveSource(){
 
     // $('.dataTables_processing').css({"display": "block", "z-index": 10000 });
     // const tBody = document.getElementById('roomTypeBody');
@@ -226,12 +213,11 @@
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
-          url: "/fetch-all-room-types",
+          url: "/fetch-all-source",
           type:"POST"
         },
         columns: [
-            {data: 'room_type_name'},
-            {data: 'room_type_acronym'},
+            {data: 'source_name'},
             {
               data: null,
               render: function(data, type, full){
@@ -262,7 +248,7 @@
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
       type:"POST",
-      url:'/create-room-type',
+      url:'/create-source',
       data:body,
       dataType:'json',
       beforeSend:function(){
@@ -308,18 +294,17 @@
   //FETCHING FOR VIEWING DATA
   $('#zero_config tbody').on('click','.btn-edit', async function(){
     var id = $(this).attr('data-bs-id');
-    room_type_id = id;
+    booking_source_id = id;
     $.ajax({
       type:"GET",
-      url:'/fetch-room-type-data/'+id,
+      url:'/fetch-source-data/'+id,
       data:'',
       dataType:'json',
       beforeSend:function(){
       },
       success:function(response){
         if(response != '' || response != null){
-          document.getElementById('edit_room_type_name').value = response.room_type_name;
-          document.getElementById('edit_room_type_acronym').value = response.room_type_acronym;
+          document.getElementById('edit_source_name').value = response.source_name;
         }
       },
       error: function(error){
@@ -340,7 +325,7 @@
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
       type:"POST",
-      url:'/update-room-type/'+room_type_id,
+      url:'/update-source-data/'+booking_source_id,
       data:body,
       dataType:'json',
       beforeSend:function(){
@@ -387,7 +372,7 @@
    //DELETE
    $('#zero_config tbody').on('click','.btn-delete', async function(){
     var id = $(this).attr('data-bs-id');
-    room_type_id = id;
+    booking_source_id = id;
   });
 
   $('#deleteBtn').on('click', function(){
@@ -396,7 +381,7 @@
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
       type:"POST",
-      url:'/delete-room-type/'+room_type_id,
+      url:'/delete-source/'+booking_source_id,
       data:'',
       dataType:'json',
       beforeSend:function(){

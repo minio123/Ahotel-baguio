@@ -23,11 +23,17 @@ class UsersController extends Controller
     }
     //FETCH
 
-    public function fetch_all_user(){
-      $data = User::where('is_active', 1)
+    public function fetch_all_user(Request $request){
+
+      if ($request->ajax()) {
+        $result = User::where('is_active', 1)
                     ->orderBy('name')
                     ->get();
-      return $data;
+        // return $result;
+        return datatables()->of($result)->toJson();
+
+      }
+
     }
 
     /**
@@ -56,6 +62,7 @@ class UsersController extends Controller
       if($user_data == 0){
         $validated = $request->validate([
           'full_name' => 'required',
+          'email' => 'required|email',
           'user_level' => 'required',
         ]);
       }else{
@@ -138,20 +145,21 @@ class UsersController extends Controller
     {
       $update_by = Auth::id();
 
-      $user_data =User::where('id', $update_by)
-                        ->where('email', $request->email)
+      $user_count =User::where('email', $request->email)
                         ->where('is_active', 1)
-                        ->count();
+                        ->get();
 
-      if($user_data == 0){
-        $validated = $request->validate([
-          'full_name' => 'required',
-          'user_level' => 'required',
-        ]);
-      }else{
+      if(!empty($user_count[0]) == true){
         $validated = $request->validate([
           'full_name' => 'required',
           'email' => 'required|unique:users|email',
+          'user_level' => 'required',
+        ]);
+
+      }else{
+        $validated = $request->validate([
+          'full_name' => 'required',
+          'email' => 'required|email',
           'user_level' => 'required',
         ]);
       }

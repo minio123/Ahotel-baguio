@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Guest;
 use Illuminate\Http\Request;
 
 class GuestsController extends Controller
@@ -13,7 +14,11 @@ class GuestsController extends Controller
      */
     public function index()
     {
-      return view('content.pages.guest');
+
+      // $guest_number = Guest::where('')
+
+      return view('content.pages.guest', ['data'  => 'A-22-00001']);
+
     }
 
     /**

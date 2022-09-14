@@ -47,14 +47,29 @@
       "slug": "settings",
       "submenu": [
         {
-          "url": "/settings-users",
-          "name": "User Lists",
-          "slug": "settings-users"
+          "url": "/settings-source",
+          "name": "Booking Source",
+          "slug": "settings-source"
+        },
+        {
+          "url": "/settings-discount",
+          "name": "Discount Lists",
+          "slug": "settings-discount"
+        },
+        {
+          "url": "/settings-charges",
+          "name": "Hotel Charges",
+          "slug": "settings-charges"
         },
         {
           "url": "/settings-permissions",
           "name": "Permission Lists",
           "slug": "settings-permission"
+        },
+        {
+          "url": "/settings-users",
+          "name": "User Lists",
+          "slug": "settings-users"
         }
       ]
     },

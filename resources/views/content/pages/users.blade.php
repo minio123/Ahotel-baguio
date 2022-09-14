@@ -319,9 +319,7 @@
 </div>
 
 <script>
-  var table = $('#zero_config').DataTable({
-    "processing": true
-  });
+  var table;
   var user_id = '';
   var user_level = $('#user_level').select2({
     dropdownParent: $('#addModal'),
@@ -340,65 +338,100 @@
   fetAllActiveUser();
   async function fetAllActiveUser(){
 
-    $('.dataTables_processing').css({"display": "block", "z-index": 10000 });
-    const tBody = document.getElementById('userBody');
-    tBody.innerHTML = '';
-    $.ajax({
-      type:"GET",
-      url:'/fetch-all-user',
-      data:'',
-      dataType:'json',
-      beforeSend:function(){
-      },
-      success:function(response){
-        if(response.length > 0){
-          response.forEach(element =>{
-            const row = document.createElement('tr');
+    // $('.dataTables_processing').css({"display": "block", "z-index": 10000 });
+    // const tBody = document.getElementById('userBody');
+    // tBody.innerHTML = '';
+    // $.ajax({
+    //   type:"GET",
+    //   url:'/fetch-all-user',
+    //   data:'',
+    //   dataType:'json',
+    //   beforeSend:function(){
+    //   },
+    //   success:function(response){
+    //     if(response.length > 0){
+    //       response.forEach(element =>{
+    //         const row = document.createElement('tr');
 
-            row.innerHTML = `
-              <td>${element.name}</td>
-              <td>${element.email}</td>
-              <td>${element.user_level}</td>
-              <td>
-                <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="View">
-                  <button class="btn btn-primary btn-icon btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#viewModal" data-bs-id="${element.id}">
-                    <i class="bx bx-show"></i>
-                  </button>
-                </span>
-                <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Change Password">
-                  <button class="btn btn-warning btn-icon btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#passwordModal" data-bs-id="${element.id}">
-                    <i class="bx bx-key"></i>
-                  </button>
-                </span>
-                <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Edit">
-                  <button class="btn btn-info btn-icon btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-id="${element.id}">
-                    <i class="bx bx-edit"></i>
-                  </button>
-                </span>
-                <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Delete">
-                  <button class="btn btn-danger btn-icon btn-sm btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-id="${element.id}">
-                    <i class="bx bx-trash"></i>
-                  </button>
-                </span>
-              </td>
-            `;
-            tBody.appendChild(row);
-            $('.dataTables_processing').css({"display": "none", "z-index": 10000 });
-          });
-        }else{
-          $('.dataTables_processing').css({"display": "none", "z-index": 10000 });
-          tBody.innerHTML=`
-            <tr>
-              <td colspan="4" class="text-center">
-                No matching records found
-              </td>
-            </tr>
-          `;
-        }
-      },
-      error: function(error){
-      console.log(error);
-      }
+    //         row.innerHTML = `
+    //           <td>${element.name}</td>
+    //           <td>${element.email}</td>
+    //           <td>${element.user_level}</td>
+    //           <td>
+    //             <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="View">
+    //               <button class="btn btn-primary btn-icon btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#viewModal" data-bs-id="${element.id}">
+    //                 <i class="bx bx-show"></i>
+    //               </button>
+    //             </span>
+    //             <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Change Password">
+    //               <button class="btn btn-warning btn-icon btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#passwordModal" data-bs-id="${element.id}">
+    //                 <i class="bx bx-key"></i>
+    //               </button>
+    //             </span>
+    //             <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Edit">
+    //               <button class="btn btn-info btn-icon btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-id="${element.id}">
+    //                 <i class="bx bx-edit"></i>
+    //               </button>
+    //             </span>
+    //             <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Delete">
+    //               <button class="btn btn-danger btn-icon btn-sm btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-id="${element.id}">
+    //                 <i class="bx bx-trash"></i>
+    //               </button>
+    //             </span>
+    //           </td>
+    //         `;
+    //         tBody.appendChild(row);
+    //         $('.dataTables_processing').css({"display": "none", "z-index": 10000 });
+    //       });
+    //     }else{
+    //       $('.dataTables_processing').css({"display": "none", "z-index": 10000 });
+    //       tBody.innerHTML=`
+    //         <tr>
+    //           <td colspan="4" class="text-center">
+    //             No matching records found
+    //           </td>
+    //         </tr>
+    //       `;
+    //     }
+    //   },
+    //   error: function(error){
+    //   console.log(error);
+    //   }
+    // });
+
+    table = $('#zero_config').DataTable({
+        processing: true,
+        searching: true,
+        serverSide: true,
+        ajax: {
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          url: "/fetch-all-user",
+          type:"POST"
+        },
+        columns: [
+            {data: 'name'},
+            {data: 'email'},
+            {data: 'user_level'},
+            {
+              data: null,
+              render: function(data, type, full){
+                console.log(full)
+                return `
+                  <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="View">
+                    <button class="btn btn-primary btn-icon btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#viewModal" data-bs-id="${full.id}"><i class="bx bx-show"></i></button>
+                  </span>
+                  <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Edit">
+                    <button class="btn btn-info btn-icon btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-id="${full.id}"><i class="bx bx-edit"></i></button>
+                  </span>
+                  <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Delete">
+                    <button class="btn btn-danger btn-icon btn-sm btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-id="${full.id}"><i class="bx bx-trash"></i></button>
+                  </span>
+                `;
+              }
+            }
+        ]
     });
   }
 
@@ -425,7 +458,7 @@
             message: response.message,
             position: 'topRight'
           });
-          fetAllActiveUser();
+          table.ajax.reload();
           user_level.val('').trigger('change');
           $('#addModal').find('form')[0].reset();
           $('#addModal').modal('toggle');
@@ -529,7 +562,7 @@
             message: response.message,
             position: 'topRight'
           });
-          fetAllActiveUser();
+          table.ajax.reload();
           $('#editModal').modal('hide');
         }else{
           iziToast.error({
@@ -584,7 +617,7 @@
             message: response.message,
             position: 'topRight'
           });
-          fetAllActiveUser();
+          table.ajax.reload();
           $('#passwordModal').find('form')[0].reset();
           $('#passwordModal').modal('hide');
         }else{
@@ -646,7 +679,7 @@
             message: response.message,
             position: 'topRight'
           });
-          fetAllActiveUser();
+          table.ajax.reload();
           $('#deleteModal').modal('hide');
         }else{
           iziToast.error({

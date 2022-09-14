@@ -100,7 +100,7 @@
                 <div class="col-md-4">
                   <div class="mb-4">
                     <label>Guest No</label>
-                    <input type="text" class="form-control" name="guest_no" id="guest_no" placeholder="" autocomplete="off" readonly>
+                    <input type="text" class="form-control" name="guest_no" id="guest_no" placeholder="" autocomplete="off" readonly value="{{$data}}">
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -525,19 +525,19 @@
   $('#zero_config').DataTable({
   });
 
-  $('#transaction_type').select2({
+  var transaction_type = $('#transaction_type').select2({
     dropdownParent: $('#addModal'),
     width: '100%',
     placeholder:'Select Transaction Type'
   });
 
-  $('#booking_source').select2({
+  var booking_source = $('#booking_source').select2({
     dropdownParent: $('#addModal'),
     width: '100%',
     placeholder:'Select Bookin Source'
   });
 
-  $('#room_no').select2({
+  var room_no = $('#room_no').select2({
       dropdownParent: $('#addModal'),
       width: '100%',
       multiple: false,
@@ -545,19 +545,19 @@
       placeholder: "Select Room No."
   });
 
-  $('#payment_type').select2({
+  var payment_type = $('#payment_type').select2({
     dropdownParent: $('#addModal'),
     width: '100%',
     placeholder:'Select Payment Type'
   });
 
-  $('#payment_status').select2({
+  var payment_status = $('#payment_status').select2({
     dropdownParent: $('#addModal'),
     width: '100%',
     placeholder:'Select Payment Status'
   });
 
-  $('#disc_type').select2({
+  var disc_type = $('#disc_type').select2({
     dropdownParent: $('#addModal'),
     width: '100%',
     placeholder:'Select Discount Type'
@@ -610,6 +610,38 @@
   //   width: '100%',
   //   placeholder:'Select '
   // });
+
+  getAllSelect2Data();
+
+  async function getAllSelect2Data(){
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      type:"POST",
+      url:'/guest-select-data',
+      data:'',
+      dataType:'json',
+      beforeSend:function(){
+      },
+      success:function(response){
+        if(response.room_lists.length > 0){
+          response.room_lists.forEach(element =>{
+            var newOption = new Option(element.room_no, element.id, false, false);
+            room_no.append(newOption).trigger('change');
+          });
+        }
+
+        if(response.booking_source.length > 0){
+          response.booking_source.forEach(element =>{
+            var newOption = new Option(element.source_name, element.id, false, false);
+            booking_source.append(newOption).trigger('change');
+          });
+        }
+      }
+    });
+  }
+
 </script>
 
 @endsection
