@@ -134,7 +134,7 @@
     <!--END -->
 
     <!-- DELETE MODAL -->
-    <div class="modal fade" id="deleteModal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+    {{-- <div class="modal fade" id="deleteModal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -155,7 +155,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> --}}
     <!--END -->
 
   </div>
@@ -241,7 +241,7 @@
                     <button class="btn btn-info btn-icon btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-id="${full.id}"><i class="bx bx-edit"></i></button>
                   </span>
                   <span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="right" data-bs-html="true" title="Delete">
-                    <button class="btn btn-danger btn-icon btn-sm btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-id="${full.id}"><i class="bx bx-trash"></i></button>
+                    <button class="btn btn-danger btn-icon btn-sm btn-delete" data-bs-id="${full.id}"><i class="bx bx-trash"></i></button>
                   </span>
                 `;
               }
@@ -269,10 +269,9 @@
       },
       success:function(response){
         if(response.status == 'success'){
-          iziToast.success({
-            title: 'Success',
-            message: response.message,
-            position: 'topRight'
+          Swal.fire({
+            text: response.message,
+            icon: 'success',
           });
           table.ajax.reload();
           $('#addModal').find('form')[0].reset();
@@ -292,10 +291,9 @@
           }
         }, 3500);
 
-        iziToast.error({
-          title: 'Failed',
-          message: error.responseJSON.message,
-          position: 'topRight'
+        Swal.fire({
+          text: error.responseJSON.message,
+          icon: 'success',
         });
       }
     });
@@ -347,18 +345,16 @@
       },
       success:function(response){
         if(response.status == 'success'){
-          iziToast.success({
-            title: 'Success',
-            message: response.message,
-            position: 'topRight'
+          Swal.fire({
+            text: response.message,
+            icon: 'success',
           });
           table.ajax.reload();
           $('#editModal').modal('hide');
         }else{
-          iziToast.error({
-            title: 'Failed',
-            message: response.message,
-            position: 'topRight'
+          Swal.fire({
+            text: response.message,
+            icon: 'error',
           });
         }
       },
@@ -375,10 +371,9 @@
           }
         }, 3500);
 
-        iziToast.error({
-          title: 'Failed',
-          message: error.responseJSON.message,
-          position: 'topRight'
+        Swal.fire({
+          text: error.responseJSON.message,
+          icon: 'error',
         });
       }
     });
@@ -388,39 +383,79 @@
    $('#zero_config tbody').on('click','.btn-delete', async function(){
     var id = $(this).attr('data-bs-id');
     room_type_id = id;
-  });
-
-  $('#deleteBtn').on('click', function(){
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      type:"POST",
-      url:'/delete-room-type/'+room_type_id,
-      data:'',
-      dataType:'json',
-      beforeSend:function(){
-      },
-      success:function(response){
-        if(response.status == 'success'){
-          iziToast.success({
-            title: 'Success',
-            message: response.message,
-            position: 'topRight'
-          });
-          table.ajax.reload();
-          $('#deleteModal').modal('hide');
-        }else{
-          iziToast.error({
-            title: 'Failed',
-            message: response.message,
-            position: 'topRight'
-          });
-          $('#deleteModal').modal('hide');
-        }
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        customClass: {
+            confirmButton: 'btn btn-primary me-3',
+            cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+    }).then(function (result) {
+      if (result.value) {
+        $.ajax({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          type:"POST",
+          url:'/delete-room-type/'+room_type_id,
+          data:'',
+          dataType:'json',
+          beforeSend:function(){
+          },
+          success:function(response){
+            if(response.status == 'success'){
+              Swal.fire({
+                text: response.message,
+                icon: 'success',
+              });
+              table.ajax.reload();
+            }else{
+              Swal.fire({
+                text: response.message,
+                icon: 'error',
+              });
+            }
+          }
+        });
       }
     });
   });
+
+  // $('#deleteBtn').on('click', function(){
+  //   $.ajax({
+  //     headers: {
+  //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //     },
+  //     type:"POST",
+  //     url:'/delete-room-type/'+room_type_id,
+  //     data:'',
+  //     dataType:'json',
+  //     beforeSend:function(){
+  //     },
+  //     success:function(response){
+  //       if(response.status == 'success'){
+  //         iziToast.success({
+  //           title: 'Success',
+  //           message: response.message,
+  //           position: 'topRight'
+  //         });
+  //         table.ajax.reload();
+  //         $('#deleteModal').modal('hide');
+  //       }else{
+  //         iziToast.error({
+  //           title: 'Failed',
+  //           message: response.message,
+  //           position: 'topRight'
+  //         });
+  //         $('#deleteModal').modal('hide');
+  //       }
+  //     }
+  //   });
+  // });
 
 </script>
 

@@ -152,7 +152,7 @@ class RoomsController extends Controller
                           ->where('is_active',1)
                           ->get();
 
-      if( $request->id == $room_count[0]->id){
+      if(!empty($room_count[0]) === true && $request->id == $room_count[0]->id){
         $validated = $request->validate([
           'room_no' => 'required',
           'room_type_id' => 'required',

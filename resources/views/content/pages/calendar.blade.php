@@ -36,44 +36,44 @@
           <div class="col-12">
             <div class="table-responsive mt-4">
               <table class="table table-bordered" style="width: 100%;">
-                <thead>
+                <thead style="background: #20c997;">
                     <tr>
-                      <th rowspan="3" style="width: 10em;" class="text-center calendar-left-header">Room No.</th>
-                      <th rowspan="3" style="width: 10em;" class="text-center calendar-left-header">Room Type</th>
-                      <th rowspan="3" style="width: 10em;" class="text-center calendar-left-header">Status</th>
+                      <th rowspan="3" style="width: 10em;" class="text-center calendar-left-header text-white">Room No.</th>
+                      <th rowspan="3" style="width: 10em;" class="text-center calendar-left-header text-white">Room Type</th>
+                      <th rowspan="3" style="width: 10em;" class="text-center calendar-left-header text-white">Status</th>
                     </tr>
                     <div id="calendar_header_right">
                       <tr>
-                        <th colspan="7" class="text-center">
+                        <th colspan="7" class="text-center text-white">
                           <label><b id="calendar_range">26 August 2022 - 1 Sepmtember 2022</b></label>
                         </th>
                       </tr>
                       <tr>
-                        <th class="text-center calendar-day-date-header">
+                        <th class="text-center calendar-day-date-header text-white">
                           <p class="calendar-date">26</p>
                           <p class="calendar-day">FRI</p>
                         </th>
-                        <th class="text-center calendar-day-date-header">
+                        <th class="text-center calendar-day-date-header text-white">
                           <p class="calendar-date">27</p>
                           <p class="calendar-day">SAT</p>
                         </th>
-                        <th class="text-center calendar-day-date-header">
+                        <th class="text-center calendar-day-date-header text-white">
                           <p class="calendar-date">28</p>
                           <p class="calendar-day">SUN</p>
                         </th>
-                        <th class="text-center calendar-day-date-header">
+                        <th class="text-center calendar-day-date-header text-white">
                           <p class="calendar-date">29</p>
                           <p class="calendar-day">MON</p>
                         </th>
-                        <th class="text-center calendar-day-date-header">
+                        <th class="text-center calendar-day-date-header text-white">
                           <p class="calendar-date">30</p>
                           <p class="calendar-day">TUE</p>
                         </th>
-                        <th class="text-center calendar-day-date-header">
+                        <th class="text-center calendar-day-date-header text-white">
                           <p class="calendar-date">31</p>
                           <p class="calendar-day">WED</p>
                         </th>
-                        <th class="text-center calendar-day-date-header">
+                        <th class="text-center calendar-day-date-header text-white">
                           <p class="calendar-date">1</p>
                           <p class="calendar-day">THU</p>
                         </th>

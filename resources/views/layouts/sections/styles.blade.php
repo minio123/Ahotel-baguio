@@ -17,6 +17,8 @@
 <link rel="stylesheet" href="{{ asset(mix('assets/css/pikaday.css')) }}" />
 <link rel="stylesheet" href="{{ asset(mix('assets/css/datatables.css')) }}" />
 <link rel="stylesheet" href="{{ asset(mix('assets/css/iziToast.css')) }}" />
+<link rel="stylesheet" href="{{ asset(mix('assets/css/sweetalert2.css')) }}" />
+
 
 
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">

@@ -137,9 +137,9 @@ class RoomTypesController extends Controller
       $is_active = RoomType::where('room_type_name', $request->room_type_name)
       ->orWhere('room_type_acronym', $request->room_type_acronym)
       ->where('is_active',1)
-      ->count();
+      ->get();
 
-      if($is_active == 0 ){
+      if(!empty($is_active[0]) === true && $is_active[0]->id == $id ){
         $validated = $request->validate([
           'room_type_name' => 'required',
           'room_type_acronym' => 'required',

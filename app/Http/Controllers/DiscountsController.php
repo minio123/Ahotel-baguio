@@ -48,7 +48,9 @@ class DiscountsController extends Controller
    */
   public function store(Request $request)
   {
+
     $curr_user = Auth::id();
+    $is_allow = 0;
 
     $is_active = Discount::where('discount_name', $request->discount_name)
                           ->where('is_active',1)
@@ -63,9 +65,15 @@ class DiscountsController extends Controller
       ]);
     }
 
+
+    if($request->require_number){
+      $is_allow = 1;
+    }
+
     $insert = new Discount;
 
     $insert->discount_name = $request->discount_name;
+    $insert->is_allow = $is_allow;
     $insert->created_by = $curr_user;
 
     $result = $insert->save();
@@ -127,14 +135,14 @@ class DiscountsController extends Controller
   public function update(Request $request, $id)
   {
     $curr_user = Auth::id();
-
+    $is_allow = 0;
     $update = Discount::find($id);
 
     $is_active = Discount::where('discount_name', $request->discount_name)
                           ->where('is_active',1)
                           ->get();
 
-    if($is_active[0]->id == $id){
+    if(!empty($is_active[0]) === true && $is_active[0]['id'] == $id){
       $validated = $request->validate([
         'discount_name' => 'required',
       ]);
@@ -145,7 +153,12 @@ class DiscountsController extends Controller
       ]);
     }
 
+    if($request->require_number){
+      $is_allow = 1;
+    }
+
     $update->discount_name = $request->discount_name;
+    $update->is_allow = $is_allow;
     $update->updated_by = $curr_user;
 
     $result = $update->save();

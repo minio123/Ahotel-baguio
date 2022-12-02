@@ -149,7 +149,8 @@ class UsersController extends Controller
                         ->where('is_active', 1)
                         ->get();
 
-      if(!empty($user_count[0]) == true){
+
+      if(!empty($user_count[0]) == true && $user_count[0]['id'] != $id){
         $validated = $request->validate([
           'full_name' => 'required',
           'email' => 'required|unique:users|email',

@@ -137,7 +137,7 @@ class HotelChargesController extends Controller
                               ->where('is_active',1)
                               ->get();
 
-    if($is_active[0]->id == $id){
+    if(!empty($is_active[0]) === true && $is_active[0]->id == $id){
       $validated = $request->validate([
       'charge_name' => 'required',
       ]);

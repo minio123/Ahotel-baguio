@@ -106,13 +106,13 @@
                 <div class="col-md-4">
                   <div class="mb-3">
                     <label>Surname</label>
-                    <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Surname" autocomplete="off">
+                    <input type="text" class="form-control last_name" name="last_name" id="last_name" placeholder="Surname" autocomplete="off">
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="mb-3">
                     <label>First Name</label>
-                    <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First Name" autocomplete="off">
+                    <input type="text" class="form-control first_name" name="first_name" id="first_name" placeholder="First Name" autocomplete="off">
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -200,7 +200,7 @@
                     <label>Full Name of Companion</label>
                     <div class="input-group">
                       <input type="text" class="form-control" name="compantion_name" id="companion_name" placeholder="Full Name" autocomplete="off">
-                      <button class="btn btn-success" id="addCompanion">Add</button>
+                      <button class="btn btn-success" type="button" id="addCompanion">Add</button>
                     </div>
                   </div>
                 </div>
@@ -229,19 +229,17 @@
                         <th colspan="3" class="text-center text-danger">Compantion Lists</th>
                       </tr>
                       <tr>
-                        <th style="width: 30px;" class="text-center">No</th>
+                        {{-- <th style="width: 30px;" class="text-center">No</th> --}}
                         <th style="width: 70%;">Full Name</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody id="companionBody">
-                      <td class="text-center">1</td>
-                      <td>Kathleen Gay Amboni</td>
-                      <td>
-                        <button type="button" id="editCompBtn" class="btn btn-icon btn-sm btn-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Edit"><i class="bx bx-edit"></i></button>
-                        <button type="button" id="removeCompBtn" class="btn btn-icon btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Remove"><i class="bx bx-trash"></i></button>
-                        <button type="button" id="setMasterCompBtn" class="btn btn-icon btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Set as Master Payer"><i class="bx bx-credit-card"></i></button>
-                      </td>
+                      <tr>
+                        <td colspan="3" class="text-center">
+                          No data available in table.
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -272,26 +270,26 @@
                   </div>
                 </div>
                 <div class="col-12">
-                  <table class="table table-bordered">
-                    <thead>
-                      <tr>
-                        <th colspan="3" class="text-center text-danger">Room Lists</th>
-                      </tr>
-                      <tr>
-                        <th style="width: 30px;" class="text-center">No</th>
-                        <th style="width: 70%;">Full Name</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody id="roomListBody">
-                      <td class="text-center">1</td>
-                      <td>301</td>
-                      <td>
-                        <button type="button" id="removeRBtn" class="btn btn-icon btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Remove"><i class="bx bx-trash"></i></button>
-                        <button type="button" id="masterRmBtn" class="btn btn-icon btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Set as Master Room"><i class="bx bx-check"></i></button>
-                      </td>
-                    </tbody>
-                  </table>
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th colspan="3" class="text-center text-danger">Room Lists</th>
+                        </tr>
+                        <tr>
+                          {{-- <th style="width: 30px;" class="text-center">No</th> --}}
+                          <th style="width: 70%;">Room No.</th>
+                          <th style="width: 70%;">Room Rate</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody id="roomListBody">
+                        <tr>
+                          <td class="text-center" colspan="4">No data available in table. </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
 
@@ -303,10 +301,27 @@
                 <div class="col-12">
                   <div class="mb-4 mt-3">
                     <h5 class="modal-tittle">
-                      <span><b>Balance:&nbsp;</b>Php.</span>&nbsp;<span class="text-danger" id="balance">3,000.00</span>
+                      <span><b>Balance:&nbsp;</b>Php.</span>&nbsp;<span class="text-danger" id="balance">0.00</span>
                     </h5>
                   </div>
                 </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label>Master Payer</label>
+                    <select name="master_payer" id="master_payer" class="form-control">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mb-3">
+                    <label>Master's Room</label>
+                    <select name="master_room" id="master_room" class="form-control">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-12"></div>
                 <div class="col-md-3">
                   <div class="mb-3">
                     <label>Mode of Payment</label>
@@ -350,36 +365,37 @@
                     </label>
                   </div>
                 </div>
-                <div class="col-md-4">
-                  <div class="mb-3">
-                    <label>Discount Type</label>
-                    <select name="disc_type" id="disc_type" class="form-control">
-                      <option value=""></option>
-                      <option value="Senior Citizen Discount">Senior Citizen Discount</option>
-                    </select>
+                <div class="d-none row" id="discount_fields">
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label>Discount Type</label>
+                      <select name="disc_type" id="disc_type" class="form-control">
+                        <option value=""></option>
+                      </select>
+                    </div>
                   </div>
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label>Number of Senior</label>
+                      <input type="number" class="form-control" name="senior" id="senior" min="0" value="0" autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label>Discount Amount</label>
+                      <input type="text" class="form-control" name="disc_amount" id="disc_amount" placeholder="Discount Amount" autocomplete="off">
+                    </div>
+                  </div>
+                  {{-- <div class="col-md-3">
+                    <div class="mb-3">
+                      <label>Discount Approved By</label>
+                      <select name="disc_approved_by" id="disc_approved_by" class="form-control">
+                        <option value=""></option>
+                        <option value="1">Hermin Doton Amboni</option>
+                      </select>
+                    </div>
+                  </div> --}}
                 </div>
-                <div class="col-md-4">
-                  <div class="mb-3">
-                    <label>Number of Senior</label>
-                    <input type="number" class="form-control" name="senior" id="senior" min="0" value="0" autocomplete="off">
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="mb-3">
-                    <label>Discount Amount</label>
-                    <input type="text" class="form-control" name="disc_amount" id="disc_amount" placeholder="Discount Amount" autocomplete="off">
-                  </div>
-                </div>
-                {{-- <div class="col-md-3">
-                  <div class="mb-3">
-                    <label>Discount Approved By</label>
-                    <select name="disc_approved_by" id="disc_approved_by" class="form-control">
-                      <option value=""></option>
-                      <option value="1">Hermin Doton Amboni</option>
-                    </select>
-                  </div>
-                </div> --}}
               </div>
 
             </form>
@@ -521,9 +537,284 @@
 <script>
 
   const day = new Date();
-
+  var companion_list = [];
+  var room_list = [];
+  var room_index = 0;
+  var balance = 0;
   $('#zero_config').DataTable({
   });
+
+
+  //ADD COMPANION
+  $('#addCompanion').click(function(){
+    var companion_name = $('#companion_name').val();
+    var total_person = $('#total_person').val() - 1;
+
+    var reservee_name = $('#first_name').val() +' '+ $('#last_name').val();
+
+    if(companion_name == ''){
+      Swal.fire({
+        text: 'Companion name is required.',
+        icon: 'error',
+      });
+      return;
+    }
+
+    if(companion_list.length == total_person){
+      Swal.fire({
+        text: 'Unable to add companion. Check the total number of person before adding another companion.',
+        icon: 'error',
+      });
+      return;
+    }
+
+    if(reservee_name == companion_name){
+      Swal.fire({
+        text: 'Unable add the reservor to the companion lists.',
+        icon: 'error',
+      });
+      console.log('test');
+      return;
+    }
+
+    if(companion_list.includes(companion_name) === false){
+      companion_list.push(companion_name);
+      var tBody = document.getElementById('companionBody');
+      var no = 1;
+      tBody.innerHTML = '';
+      for(let i = 0; i<companion_list.length; i++){
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="text-left">${companion_list[i]}</td>
+          <td class="text-left">
+            <button type="button" id="removeCompBtn" class="btn btn-icon btn-sm btn-danger removeCompanion" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Remove" data-bs-index="${i}"><i class="bx bx-trash"></i></button>
+          </td>
+        `;
+        tBody.appendChild(row);
+        no++
+        $('#companion_name').val('');
+      }
+      addCompanionSelect();
+    }else{
+      $wal.fire({
+        text: 'Companion already exist.',
+        icon: 'error'
+      });
+      return;
+    }
+  });
+
+
+  //REMOVE COMPANION
+  $('#companionBody').on('click', '.removeCompanion', function(){
+    var array_index = $(this).attr('data-bs-index');
+    companion_list.splice(array_index,1);
+    var tBody = document.getElementById('companionBody');
+
+    if(companion_list.length == 0){
+      tBody.innerHTML = `
+        <tr>
+          <td colspan="2" class="text-center">
+            No data available in table.
+          </td>
+        </tr>
+      `;
+    }else{
+      var no = 1;
+      tBody.innerHTML = '';
+      for(let i = 0; i<companion_list.length; i++){
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="text-left">${companion_list[i]}</td>
+          <td class="text-left">
+            <button type="button" id="removeCompBtn" class="btn btn-icon btn-sm btn-danger removeCompanion" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Remove" data-bs-index="${i}"><i class="bx bx-trash"></i></button>
+          </td>
+        `;
+        tBody.appendChild(row);
+        no++
+      }
+    }
+
+    addCompanionSelect();
+  });
+
+
+  //ADD COMPANION IN SELECT2
+  function addCompanionSelect(){
+    master_payer.empty();
+    var defaultOption = new Option('', '', false, false);
+    master_payer.append(defaultOption).trigger('change');
+
+    var first_name = $('#first_name').val();
+    var last_name = $('#last_name').val();
+
+    if(first_name && last_name){
+      var newOption = new Option(first_name+' '+last_name, false, false);
+      master_payer.append(newOption).trigger('change');
+    }
+
+    for(let i = 0; i<companion_list.length; i++){
+      var newOption = new Option(companion_list[i], companion_list[i], false, false);
+      master_payer.append(newOption).trigger('change');
+    }
+  }
+
+
+  //ADDING TO COMPANION THE SELECT2 FROM THE SURNAME AND FIRSTNAME
+  $('.first_name, .last_name').change(function(){
+    addCompanionSelect();
+  });
+
+
+  //TOTAL PERSION FUNCTION
+  $('#adult').change(function(){
+    var adult = $(this).val();
+    var kid = $('#kids').val() > 0 ? parseInt($('#kids').val()):0;
+    var total = parseInt(adult)+parseInt(kid);
+
+    $('#total_person').val(total);
+  });
+
+  $('#kids').change(function(){
+    var kid = $(this).val();
+    var adult = $('#adult').val() > 0 ? parseInt($('#adult').val()):0;
+    var total = parseInt(adult)+parseInt(kid);
+
+    $('#total_person').val(total);
+  });
+
+
+  //ROOM FUNCTION
+  $('#room_no').change(function(){
+    var room_data = $(this).val().split('-');
+    if(room_data[0] == ''){
+      $('#rate').val('');
+    }else{
+      $('#rate').val(room_data[1].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+    }
+  });
+
+
+  //ADD ROOM
+  $('#addRoomBtn').click(function(){
+
+    if($('#room_no').val() == '' || $('#rate').val() <= 0){
+      iziToast.error({
+        title: 'Error',
+        message: 'Room no. and room rate is required.',
+        position: 'topRight'
+      });
+      return;
+    }
+
+    var room_no_ = $('#room_no').val().split('-');
+    var tbody = document.getElementById('roomListBody');
+    var no = 1;
+
+    if(room_list.length > 0){
+      for(var i=0; i<room_list.length;i++){
+        if(room_no_[0] == room_list[i]['room_id']){
+          iziToast.error({
+            title: 'Error',
+            message: 'Room no. already in list.',
+            position: 'topRight'
+          });
+          return;
+        }
+      }
+    }
+
+    tbody.innerHTML = '';
+
+    room_list.push({
+      index: room_index,
+      room_id: room_no_[0],
+      room_no: room_no_[2],
+      rate: $('#rate').val().replace(/,/g, ''),
+    });
+
+    balance += parseFloat($('#rate').val().replace(/,/g, ''));
+
+    $('#balance').text(balance.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+
+    room_list.forEach(element => {
+      const row = document.createElement('tr');
+      row.setAttribute('id',`room_${element.index}`);
+        // <td class="text-center">${no}</td>
+      row.innerHTML = `
+        <td class="text-left">${element.room_no}</td>
+        <td class="text-left">${element.rate.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+        <td class="text-left">
+          <button type="button" id="removeRBtn" class="btn btn-icon btn-sm btn-danger removeRoom" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Remove" data-bs-my_index="${element.index}"><i class="bx bx-trash"></i></button>
+        </td>
+      `;
+      tbody.appendChild(row);
+      no++;
+      room_no.val(null).trigger('change');
+      $('#rate').val('');
+    });
+
+    room_index++;
+
+    addMasterRoomSelect();
+  });
+
+
+  //REMOVE ROOM
+  $('#roomListBody').on('click', '.removeRoom', function(){
+    var my_room_index = $(this).attr('data-bs-my_index');
+    var tbody = document.getElementById('roomListBody');
+    for(let i = 0; i < room_list.length; i++){
+      if(room_list[i]['index'] == my_room_index){
+        room_list.splice(i, 1);
+      }
+    }
+
+    balance = 0;
+    $(`#room_${my_room_index}`).remove();
+    if(room_list.length > 0){
+      room_list.forEach(element => {
+        balance += parseFloat(element.rate);
+      });
+      $('#balance').text(balance.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    }else{
+      $('#balance').text('0.00');
+      room_list = [];
+      tbody.innerHTML = `
+        <tr>
+          <td class="text-center" colspan="3">No data available in table. </td>
+        </tr>
+      `;
+    }
+    addMasterRoomSelect();
+  });
+
+
+  //ADD ROOM IN SELECT2
+  function addMasterRoomSelect(){
+    master_room.empty();
+    var defaultOption = new Option('', '', false, false);
+    master_room.append(defaultOption).trigger('change');
+    room_list.forEach(element =>{
+      var newOption = new Option(element.room_no, element.room_id, false, false);
+      master_room.append(newOption).trigger('change');
+    });
+
+  }
+
+
+  //DISCOUNT APPLICATION
+  $("#is_discounted").click(function(){
+    if($(this).prop("checked") === true){
+      $("#discount_fields").removeClass('d-none');
+    }else{
+      $("#discount_fields").addClass('d-none');
+    }
+  });
+
+
+
+  //select2, pikaday, mdtimepicker declarations
 
   var transaction_type = $('#transaction_type').select2({
     dropdownParent: $('#addModal'),
@@ -535,6 +826,24 @@
     dropdownParent: $('#addModal'),
     width: '100%',
     placeholder:'Select Bookin Source'
+  });
+
+  var master_payer = $('#master_payer').select2({
+    dropdownParent: $('#addModal'),
+    width: '100%',
+    placeholder:"Select Master Payer"
+  });
+
+  var master_room = $('#master_room').select2({
+    dropdownParent: $('#addModal'),
+    width: '100%',
+    placeholder:"Select Master's Room"
+  });
+
+  var transaction_type = $('#transaction_type').select2({
+    dropdownParent: $('#addModal'),
+    width: '100%',
+    placeholder:'Select Transaction Type'
   });
 
   var room_no = $('#room_no').select2({
@@ -579,7 +888,7 @@
 
   var birth_date = new Pikaday({
     field: $('#birth_date')[0],
-    minDate: new Date(day.setDate(day.getDate() + 1)),
+    // minDate: new Date(day.setDate(day.getDate() + 1)),
     yearRange: [1900, day.getFullYear()],
     theme: 'month-year',
     toString(date, format) { // using moment
@@ -626,16 +935,29 @@
       },
       success:function(response){
         if(response.room_lists.length > 0){
+          var defaultOption = new Option('', '', false, false);
+          room_no.append(defaultOption).trigger('change');
           response.room_lists.forEach(element =>{
-            var newOption = new Option(element.room_no, element.id, false, false);
+            var newOption = new Option(element.room_no, element.id+'-'+element.room_rate+'-'+element.room_no, false, false);
             room_no.append(newOption).trigger('change');
           });
         }
 
         if(response.booking_source.length > 0){
+          var defaultOption = new Option('', '', false, false);
+          booking_source.append(defaultOption).trigger('change');
           response.booking_source.forEach(element =>{
             var newOption = new Option(element.source_name, element.id, false, false);
             booking_source.append(newOption).trigger('change');
+          });
+        }
+
+        if(response.discount_lists.length > 0){
+          var defaultOption = new Option('', '', false, false);
+          disc_type.append(defaultOption).trigger('change');
+          response.discount_lists.forEach(element =>{
+            var newOption = new Option(element.discount_name, element.id, false, false);
+            disc_type.append(newOption).trigger('change');
           });
         }
       }
