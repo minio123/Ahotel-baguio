@@ -166,7 +166,7 @@
                 <div class="col-md-2">
                   <div class="mb-3">
                     <label>Arrival Time</label>
-                    <input type="text" class="form-control timepicker" name="arrival_time" id="arrival_time">
+                    <input type="text" class="form-control timepicker" name="arrival_time" id="arrival_time" value="8:00 AM">
                   </div>
                 </div>
                 <div class="col-md-3">
@@ -178,7 +178,7 @@
                 <div class="col-md-2">
                   <div class="mb-3">
                     <label>Departure Time</label>
-                    <input type="text" class="form-control timepicker" name="departure_time" id="departure_time">
+                    <input type="text" class="form-control timepicker" name="departure_time" id="departure_time" value="12:00 PM">
                   </div>
                 </div>
                 <div class="col-md-2">
@@ -291,20 +291,6 @@
                     </table>
                   </div>
                 </div>
-              </div>
-
-              {{-- PAYMENT INFORMATION --}}
-              <div class="row mt-5">
-                <div class="col-12">
-                  <h5 class="modal-tittle">Payment Information</h5>
-                </div>
-                <div class="col-12">
-                  <div class="mb-4 mt-3">
-                    <h5 class="modal-tittle">
-                      <span><b>Balance:&nbsp;</b>Php.</span>&nbsp;<span class="text-danger" id="balance">0.00</span>
-                    </h5>
-                  </div>
-                </div>
                 <div class="col-md-3">
                   <div class="mb-3">
                     <label>Master Payer</label>
@@ -322,6 +308,49 @@
                   </div>
                 </div>
                 <div class="col-12"></div>
+              </div>
+
+              {{-- PAYMENT INFORMATION --}}
+              <div class="row mt-5">
+                <div class="col-12">
+                  <h5 class="modal-tittle">Payment Information</h5>
+                </div>
+                <div class="col-12">
+                  <div class="mb-4 mt-3">
+                    <h5 class="modal-tittle">
+                      <span><b>Balance:&nbsp;</b>Php.</span>&nbsp;<span class="text-danger" id="balance">0.00</span>
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="mb-3 mt-n2">
+                    <label>
+                      <input type="checkbox" class="form-check-input" name="is_discounted" id="is_discounted">&nbsp;Apply Discount
+                    </label>
+                  </div>
+                </div>
+                <div class="d-none row" id="discount_fields">
+                  <div class="col-md-3">
+                    <div class="mb-3">
+                      <label>Discount Type</label>
+                      <select name="disc_type" id="disc_type" class="form-control">
+                        <option value=""></option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-3 d-none" id="discount_col">
+                    <div class="mb-3">
+                      <label>Number of Senior</label>
+                      <input type="number" class="form-control" name="senior" id="senior" min="0" value="0" autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="mb-3">
+                      <label>Discount Amount</label>
+                      <input type="text" class="form-control" name="disc_amount" id="disc_amount" placeholder="Discount Amount" autocomplete="off">
+                    </div>
+                  </div>
+                </div>
                 <div class="col-md-3">
                   <div class="mb-3">
                     <label>Mode of Payment</label>
@@ -357,47 +386,7 @@
                     <input type="text" class="form-control" name="payment_amount" id="payment_amount" placeholder="Payment Amount" autocomplete="off">
                   </div>
                 </div>
-
-                <div class="col-12">
-                  <div class="mb-3">
-                    <label>
-                      <input type="checkbox" class="form-check-input" name="is_discounted" id="is_discounted">&nbsp;Apply Discount
-                    </label>
-                  </div>
-                </div>
-                <div class="d-none row" id="discount_fields">
-                  <div class="col-md-4">
-                    <div class="mb-3">
-                      <label>Discount Type</label>
-                      <select name="disc_type" id="disc_type" class="form-control">
-                        <option value=""></option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="mb-3">
-                      <label>Number of Senior</label>
-                      <input type="number" class="form-control" name="senior" id="senior" min="0" value="0" autocomplete="off">
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="mb-3">
-                      <label>Discount Amount</label>
-                      <input type="text" class="form-control" name="disc_amount" id="disc_amount" placeholder="Discount Amount" autocomplete="off">
-                    </div>
-                  </div>
-                  {{-- <div class="col-md-3">
-                    <div class="mb-3">
-                      <label>Discount Approved By</label>
-                      <select name="disc_approved_by" id="disc_approved_by" class="form-control">
-                        <option value=""></option>
-                        <option value="1">Hermin Doton Amboni</option>
-                      </select>
-                    </div>
-                  </div> --}}
-                </div>
               </div>
-
             </form>
           </div>
           <div class="modal-footer">
@@ -539,9 +528,24 @@
   const day = new Date();
   var companion_list = [];
   var room_list = [];
+  var discount_list = [];
   var room_index = 0;
   var balance = 0;
-  $('#zero_config').DataTable({
+
+
+  //COMPUTING LENGTH OF STAY
+  $('#arrival_date, #departure_date').change(function(){
+    var arrival_date =  new Date(moment($('#arrival_date').val()).format('YYYY/MM/DD'));
+    var departure_date = new Date(moment($('#departure_date').val()).format('YYYY/MM/DD'));
+
+    var length_of_stay = ((departure_date.getTime() - arrival_date.getTime()))/ (1000 * 3600 * 24);
+    length_of_stay = length_of_stay == 0 ? 1 : length_of_stay;
+    if(length_of_stay >= 1){
+      $('#length_of_stay').val(length_of_stay);
+      getTotalBalance();
+      appyDiscount();
+    }
+
   });
 
 
@@ -675,6 +679,7 @@
     $('#total_person').val(total);
   });
 
+
   $('#kids').change(function(){
     var kid = $(this).val();
     var adult = $('#adult').val() > 0 ? parseInt($('#adult').val()):0;
@@ -733,10 +738,6 @@
       rate: $('#rate').val().replace(/,/g, ''),
     });
 
-    balance += parseFloat($('#rate').val().replace(/,/g, ''));
-
-    $('#balance').text(balance.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-
     room_list.forEach(element => {
       const row = document.createElement('tr');
       row.setAttribute('id',`room_${element.index}`);
@@ -757,26 +758,44 @@
     room_index++;
 
     addMasterRoomSelect();
+    getTotalBalance()
+    disableDiscount();
+    appyDiscount()
   });
 
 
   //REMOVE ROOM
   $('#roomListBody').on('click', '.removeRoom', function(){
     var my_room_index = $(this).attr('data-bs-my_index');
-    var tbody = document.getElementById('roomListBody');
     for(let i = 0; i < room_list.length; i++){
       if(room_list[i]['index'] == my_room_index){
         room_list.splice(i, 1);
       }
     }
 
-    balance = 0;
+    // balance = 0;
+
     $(`#room_${my_room_index}`).remove();
+    addMasterRoomSelect();
+    getTotalBalance();
+    disableDiscount();
+    appyDiscount();
+  });
+
+
+  //COMPUTING TOTAL (NOT DISCOUNTED VALUE)
+  async function getTotalBalance(params) {
+    var tbody = document.getElementById('roomListBody');
+    balance = 0;
+    var length_of_stay = $('#length_of_stay').val();
     if(room_list.length > 0){
       room_list.forEach(element => {
         balance += parseFloat(element.rate);
       });
+
+      balance *= length_of_stay
       $('#balance').text(balance.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+
     }else{
       $('#balance').text('0.00');
       room_list = [];
@@ -786,9 +805,7 @@
         </tr>
       `;
     }
-    addMasterRoomSelect();
-  });
-
+  }
 
   //ADD ROOM IN SELECT2
   function addMasterRoomSelect(){
@@ -803,18 +820,77 @@
   }
 
 
-  //DISCOUNT APPLICATION
+  //SHOW DISOCOUNT FIELD
   $("#is_discounted").click(function(){
     if($(this).prop("checked") === true){
       $("#discount_fields").removeClass('d-none');
+      disableDiscount();
+      appyDiscount()
     }else{
       $("#discount_fields").addClass('d-none');
+      $('#disc_amount').val('');
+      $('#disc_amount').attr('readonly', 'readonly');
+      disc_type.val(null).trigger('change');
+      getTotalBalance();
     }
   });
 
 
 
-  //select2, pikaday, mdtimepicker declarations
+  //DISOCUNT SHOW NUMBER OF PERSON TO BE DISCOUNTED FIELD
+  $('#disc_type').change(function(){
+    var discount_id = $(this).val();
+    if(discount_id){
+      for(let i = 0; i < discount_list.length; i++){
+        if(discount_id == discount_list[i]['id']){
+          if(discount_list[i]['is_allow'] == 1){
+            $('#discount_col').removeClass('d-none');
+          }else{
+            $('#discount_col').addClass('d-none');
+          }
+        }
+      }
+    }
+  });
+
+
+  //APPLYING DISCOUNT
+  $('#disc_amount').keyup(function(){
+    appyDiscount();
+  });
+
+  async function appyDiscount() {
+    var discount_amount = $('#disc_amount').val();
+    var new_balance = 0;
+    if(discount_amount){
+      discount_amount = discount_amount.replace(/,/g, '');
+      if(balance > 0){
+        new_balance = balance - discount_amount;
+        $('#balance').text(new_balance.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+        disableDiscount();
+      }
+    }else{
+        $('#balance').text(balance.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+        disableDiscount();
+    }
+  }
+
+
+  //DISABLING FIELDS
+  $(document).ready(function(){
+    disableDiscount();
+  });
+
+  async function disableDiscount() {
+    if(balance == 0){
+      $('#disc_amount').val('');
+      $('#disc_amount').attr('readonly', 'readonly');
+    }else{
+      $('#disc_amount').removeAttr('readonly');
+    }
+  }
+
+  //select2, pikaday, mdtimepicker declarations, cleave
 
   var transaction_type = $('#transaction_type').select2({
     dropdownParent: $('#addModal'),
@@ -878,11 +954,21 @@
 
   var arrival_date = new Pikaday({
     field: $('#arrival_date')[0],
-    minDate: new Date(day.setDate(day.getDate() + 1)),
+    minDate: new Date(day.setDate(day.getDate())),
     yearRange: [1900, day.getFullYear()],
     theme: 'month-year',
     toString(date, format) { // using moment
         return moment(date).format('MMMM DD, YYYY');
+    },
+  });
+
+  var departure_date = new Pikaday({
+    field: $('#departure_date')[0],
+    minDate: new Date(day.setDate(day.getDate()+1)),
+    yearRange: [1900, day.getFullYear()],
+    theme: 'month-year',
+    toString(date, format) { // using moment
+      return moment(date).format('MMMM DD, YYYY');
     },
   });
 
@@ -896,16 +982,6 @@
     },
   });
 
-  var departure_date = new Pikaday({
-    field: $('#departure_date')[0],
-    minDate: new Date(day.setDate(day.getDate())),
-    yearRange: [1900, day.getFullYear()],
-    theme: 'month-year',
-    toString(date, format) { // using moment
-      return moment(date).format('MMMM DD, YYYY');
-    },
-  });
-
   var birthday = new Pikaday({
     field: $('#birthday')[0],
     yearRange: [1900, day.getFullYear()],
@@ -913,6 +989,16 @@
     toString(date, format) { // using moment
       return moment(date).format('MMMM DD, YYYY');
     },
+  });
+
+  var payment_amount = new Cleave('#payment_amount', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand'
+  });
+
+  var disc_amount = new Cleave('#disc_amount', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand'
   });
 
   // $('#disc_approved_by').select2({
@@ -954,6 +1040,7 @@
 
         if(response.discount_lists.length > 0){
           var defaultOption = new Option('', '', false, false);
+          discount_list = response.discount_lists;
           disc_type.append(defaultOption).trigger('change');
           response.discount_lists.forEach(element =>{
             var newOption = new Option(element.discount_name, element.id, false, false);
